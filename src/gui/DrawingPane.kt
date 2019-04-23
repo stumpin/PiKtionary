@@ -1,10 +1,13 @@
 package gui
 
 import java.awt.*
-import java.awt.event.MouseEvent
-import java.awt.event.MouseListener
-import java.awt.event.MouseMotionListener
+import java.awt.event.*
+import java.util.*
 import javax.swing.JPanel
+import kotlin.collections.ArrayList
+import java.util.HashSet
+
+
 
 /**
  * Created by HP xw8400
@@ -12,9 +15,11 @@ import javax.swing.JPanel
  * Date: 4/22/2019.
  */
 
-class DrawingPane : JPanel(), MouseMotionListener, MouseListener {
+class DrawingPane : JPanel(), MouseMotionListener, MouseListener, KeyListener {
 
-    private val shapes = arrayListOf<ArrayList<Point>>()
+    private val pressed = HashSet<Int>()
+
+    private val shapes = Stack<ArrayList<Point>>()
 
     private var currentShape = arrayListOf<Point>()
 
@@ -23,12 +28,15 @@ class DrawingPane : JPanel(), MouseMotionListener, MouseListener {
     init {
         addMouseMotionListener(this)
         addMouseListener(this)
+        addKeyListener(this)
+        isFocusable = true
         preferredSize = Dimension(750, 650)
+        requestFocusInWindow()
     }
 
     override fun mouseDragged(event: MouseEvent) {
         if (!shapes.contains(currentShape)) {
-            shapes.add(currentShape)
+            shapes.push(currentShape)
         }
         if (shapeEnded) {
             currentShape = arrayListOf()
@@ -43,6 +51,22 @@ class DrawingPane : JPanel(), MouseMotionListener, MouseListener {
     override fun mouseReleased(event: MouseEvent) {
         shapeEnded = true
     }
+
+    @Synchronized
+    override fun keyPressed(event: KeyEvent) {
+        if (pressed.contains(17) && event.extendedKeyCode == 90 && !shapes.empty()) {
+            shapes.pop()
+            currentShape = arrayListOf()
+            repaint()
+        }
+    }
+
+    @Synchronized
+    override fun keyReleased(event: KeyEvent) {
+        pressed.remove(event.extendedKeyCode)
+    }
+
+    override fun keyTyped(event: KeyEvent) {}
 
     override fun mouseMoved(event: MouseEvent) {}
 
