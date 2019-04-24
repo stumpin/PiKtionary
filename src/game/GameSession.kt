@@ -1,7 +1,5 @@
 package game
 
-import network.Host
-import network.Player
 import java.util.concurrent.ConcurrentHashMap
 
 /**

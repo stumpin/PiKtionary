@@ -1,5 +1,7 @@
 package gui
 
+import gui.swing.InternalDrawingPanel
+
 import javax.swing.JFrame
 
 /**
@@ -8,14 +10,12 @@ import javax.swing.JFrame
  * Date: 4/22/2019.
  */
 
+class ApplicationFrame : JFrame("Pictionary") {
 
-class ApplictionFrame() : JFrame("Pictionary") {
-
-    val pane : DrawingPane
+    private val drawingPanel = InternalDrawingPanel()
 
     init {
-        pane = DrawingPane()
-        contentPane = pane
+        contentPane = drawingPanel
         pack()
         setLocationRelativeTo(null)
         isVisible = true

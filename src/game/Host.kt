@@ -1,4 +1,4 @@
-package network
+package game
 
 /**
  * Created by HP xw8400
@@ -6,6 +6,6 @@ package network
  * Date: 4/22/2019.
  */
 
-class Player {
+class Host(name : String) : Player(name) {
 
 }
