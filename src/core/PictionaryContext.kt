@@ -14,12 +14,18 @@ import gui.panels.LandingPanel
 
 class PictionaryContext {
 
+    /**
+     * The first panel shown when the application is ran
+     */
     val landing = LandingPanel(this)
 
     val tools = ArtistToolsPanel(this)
 
     val drawing = InternalDrawingPanel(this)
 
+    /**
+     * The application's frame
+     */
     val frame = ApplicationFrame(this)
 
     init {

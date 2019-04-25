@@ -33,7 +33,7 @@ class InternalDrawingPanel(val pictionary: PictionaryContext) : JPanel(), MouseM
     /**
      * The current color of the shape (default black
      */
-    private var color = Color.BLACK
+    var color = Color.BLACK
 
     /**
      * The current shape being drawn
@@ -106,7 +106,11 @@ class InternalDrawingPanel(val pictionary: PictionaryContext) : JPanel(), MouseM
 
     override fun mouseClicked(event: MouseEvent) {}
 
-    override fun mouseEntered(event: MouseEvent) {}
+    override fun mouseEntered(event: MouseEvent) {
+        //a little annoying, but needs to be done
+        //since the other panels will take focus
+        requestFocusInWindow()
+    }
 
     override fun mouseExited(event: MouseEvent) {}
 

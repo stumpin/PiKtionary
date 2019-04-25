@@ -7,7 +7,7 @@ import javafx.embed.swing.JFXPanel
 import javafx.scene.Scene
 import javafx.scene.control.Button
 import javafx.scene.layout.FlowPane
-import javafx.scene.layout.VBox
+
 
 /**
  * Created by HP xw8400
@@ -22,7 +22,6 @@ class LandingPanel(val pictionary: PictionaryContext) : JFXPanel() {
 
         Platform.runLater {
             scene = buildScene()
-            isVisible = true
         }
     }
 

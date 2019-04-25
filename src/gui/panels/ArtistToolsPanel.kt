@@ -2,6 +2,13 @@ package gui.panels
 
 import core.PictionaryContext
 import gui.StyleConstants
+import javafx.application.Platform
+import javafx.embed.swing.JFXPanel
+import javafx.scene.Scene
+import javafx.scene.control.Button
+import javafx.scene.control.ColorPicker
+import javafx.scene.layout.HBox
+
 import java.awt.*
 
 import java.awt.event.MouseEvent
@@ -11,6 +18,7 @@ import java.io.File
 import java.lang.Exception
 import javax.imageio.ImageIO
 import javax.swing.Box
+import javax.swing.JColorChooser
 
 import javax.swing.JPanel
 
@@ -42,7 +50,35 @@ class ArtistToolsPanel(val pictionary: PictionaryContext) : JPanel(), MouseMotio
         } catch (e : Exception) {
             e.printStackTrace()
         }
+
+        val picker = JColorChooser(Color.black)
+
+        picker.selectionModel.addChangeListener{
+            pictionary.drawing.color = picker.color
+        }
+
+        add(picker)
+       /* Platform.runLater {
+            scene = buildScene()
+            isVisible = true
+        }*/
     }
+
+   /* private fun buildScene() : Scene {
+        val picker = ColorPicker(javafx.scene.paint.Color.BLACK)
+        picker.valueProperty().addListener({ o, old, color -> pictionary.drawing.color =
+            Color(
+                color.red as Float,
+                color.getGreen() as Float,
+                color.getBlue() as Float,
+                color.getOpacity() as Float
+            ) })
+        val box = HBox(picker)
+
+       // pane.children.add(button)
+
+        return Scene(box)
+    }*/
 
     override fun mouseDragged(e: MouseEvent) {}
 
