@@ -2,12 +2,6 @@ package gui.panels
 
 import core.PictionaryContext
 import gui.StyleConstants
-import javafx.application.Platform
-import javafx.embed.swing.JFXPanel
-import javafx.scene.Scene
-import javafx.scene.control.Button
-import javafx.scene.control.ColorPicker
-import javafx.scene.layout.HBox
 
 import java.awt.*
 
@@ -17,10 +11,7 @@ import java.awt.event.MouseMotionListener
 import java.io.File
 import java.lang.Exception
 import javax.imageio.ImageIO
-import javax.swing.Box
-import javax.swing.JColorChooser
-
-import javax.swing.JPanel
+import javax.swing.*
 
 
 /**
@@ -51,39 +42,13 @@ class ArtistToolsPanel(val pictionary: PictionaryContext) : JPanel(), MouseMotio
             e.printStackTrace()
         }
 
-        val picker = JColorChooser(Color.black)
-
-        picker.selectionModel.addChangeListener{
-            pictionary.drawing.color = picker.color
-        }
-
-        add(picker)
-       /* Platform.runLater {
-            scene = buildScene()
-            isVisible = true
-        }*/
+        add(ColorGridPicker(pictionary))
     }
 
-   /* private fun buildScene() : Scene {
-        val picker = ColorPicker(javafx.scene.paint.Color.BLACK)
-        picker.valueProperty().addListener({ o, old, color -> pictionary.drawing.color =
-            Color(
-                color.red as Float,
-                color.getGreen() as Float,
-                color.getBlue() as Float,
-                color.getOpacity() as Float
-            ) })
-        val box = HBox(picker)
+    override fun mouseDragged(event: MouseEvent) {}
 
-       // pane.children.add(button)
-
-        return Scene(box)
-    }*/
-
-    override fun mouseDragged(e: MouseEvent) {}
-
-    override fun mouseMoved(e: MouseEvent) {
-        val hovering = box.contains(e.point)
+    override fun mouseMoved(event: MouseEvent) {
+        val hovering = box.contains(event.point)
         //repaint only if they are different
         //prevents frequent calls to repaint()
         if (hovering != hoveringTrash) {
@@ -92,30 +57,80 @@ class ArtistToolsPanel(val pictionary: PictionaryContext) : JPanel(), MouseMotio
         }
     }
 
-    override fun mouseClicked(e: MouseEvent) {
+    override fun mouseClicked(event: MouseEvent) {
         if (hoveringTrash) {
             pictionary.drawing.clear()
         }
     }
 
-    override fun mousePressed(e: MouseEvent) {}
+    override fun mousePressed(event: MouseEvent) {}
 
-    override fun mouseReleased(e: MouseEvent) {}
+    override fun mouseReleased(event: MouseEvent) {}
 
-    override fun mouseEntered(e: MouseEvent) {}
+    override fun mouseEntered(event: MouseEvent) {}
 
-    override fun mouseExited(e: MouseEvent) {
+    override fun mouseExited(event: MouseEvent) {
         hoveringTrash = false
         repaint()
     }
 
-    override fun paintComponent(g: Graphics) {
-        super.paintComponent(g)
+    override fun paintComponent(graphics: Graphics) {
+        super.paintComponent(graphics)
 
         if (hoveringTrash) {
-            g.color = highlight
-            g.fillRect(box.x, box.y, box.width, box.height)
+            graphics.color = highlight
+            graphics.fillRect(box.x, box.y, box.width, box.height)
         }
-        g.drawImage(image, 12, 550, null)
+        graphics.drawImage(image, 12, 550, null)
+    }
+
+    /**
+     * Panel that holds each color swatch
+     */
+    inner class ColorGridPicker(val pictionary: PictionaryContext) : JPanel(GridLayout(7, 3, 2, 2)) {
+        /**
+         * The current selected panel
+         */
+        var selectedPanel = JPanel()
+
+        init {
+            preferredSize = Dimension(StyleConstants.DEFAULT_SIZE.width / 12 - 10, 165)
+            background = Color.LIGHT_GRAY
+
+            for (color in StyleConstants.PALETTE) {
+                val panel = JPanel()
+                val hoverColor = color.darker()
+
+                panel.background = color
+                panel.border = BorderFactory.createRaisedBevelBorder()
+                panel.addMouseListener(object: MouseListener {
+                    /**
+                     * Clicked in effect
+                     */
+                    override fun mouseClicked(e: MouseEvent) {
+                        selectedPanel.border = BorderFactory.createRaisedBevelBorder()
+                        panel.border = BorderFactory.createLoweredBevelBorder()
+                        selectedPanel = panel
+                        pictionary.drawing.color = color
+                    }
+
+                    override fun mousePressed(e: MouseEvent) {}
+
+                    override fun mouseReleased(e: MouseEvent) {}
+
+                    /**
+                     * hover effect
+                     */
+                    override fun mouseEntered(e: MouseEvent) {
+                        panel.background = hoverColor
+                    }
+
+                    override fun mouseExited(e: MouseEvent) {
+                        panel.background = color
+                    }
+                })
+                add(panel)
+            }
+        }
     }
 }

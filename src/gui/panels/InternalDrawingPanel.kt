@@ -29,9 +29,9 @@ class InternalDrawingPanel(val pictionary: PictionaryContext) : JPanel(), MouseM
     private val shapes = Stack<ConnectedShape>()
 
     /**
-     * The current color of the shape (default black
+     * The current color of the shape (default black)
      */
-    var color = Color.BLACK
+    var color = StyleConstants.PALETTE[15]
 
     /**
      * The current shape being drawn
@@ -62,24 +62,25 @@ class InternalDrawingPanel(val pictionary: PictionaryContext) : JPanel(), MouseM
     }
 
     override fun mousePressed(event: MouseEvent) {
-        //the mouse is pressed, start drawing
-        drawing = true
-        //create a new shape
-        currentShape = ConnectedShape(color, ArrayList())
-        //add the current point to the shape's points
-        currentShape.points.add(event.point)
-        //push the shape into the stack
-        shapes.push(currentShape)
-        repaint()
+        //only start drawing if the left mouse button was pressed
+        if (event.button == MouseEvent.BUTTON1) {
+            //the mouse is pressed, start drawing
+            drawing = true
+            //create a new shape
+            currentShape = ConnectedShape(color, ArrayList())
+            //add the current point to the shape's points
+            currentShape.points.add(event.point)
+            //push the shape into the stack
+            shapes.push(currentShape)
+            repaint()
+        }
     }
 
 
     override fun mouseDragged(event: MouseEvent) {
-        if (drawing) {
-            if (!currentShape.points.contains(event.point)) {
-                currentShape.points.add(event.point)
-                repaint()
-            }
+        if (drawing && !currentShape.points.contains(event.point)) {
+            currentShape.points.add(event.point)
+            repaint()
         }
     }
 
@@ -117,31 +118,31 @@ class InternalDrawingPanel(val pictionary: PictionaryContext) : JPanel(), MouseM
 
     override fun mouseExited(event: MouseEvent) {}
 
-    override fun paintComponent(g: Graphics) {
-        super.paintComponent(g)
+    override fun paintComponent(graphics: Graphics) {
+        super.paintComponent(graphics)
 
-        val g2 = g as Graphics2D
-        g2.stroke = BasicStroke(10f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 10.0f, null, 0.0f)
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+        val graphics2D = graphics as Graphics2D
+        graphics2D.stroke = BasicStroke(10f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 10.0f, null, 0.0f)
+        graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
 
         //there will be only 1 point in a shape if the user performs a click and never drags the mouse
         //if there is only one point in the shape, just draw an oval
         //else, draw the lines connected
 
         shapes.forEach { shape ->
-            g2.color = shape.color
+            graphics2D.color = shape.color
 
             when (shape.points.size) {
                 1 -> {
                     val point = shape.points[0]
-                    g2.fillOval(point.x - 5, point.y - 5, 10, 10)
+                    graphics2D.fillOval(point.x - 5, point.y - 5, 10, 10)
                 }
                 else -> {
                     shape.points.forEachIndexed { index, point ->
                         run {
                             if (index > 0) {
                                 val previous = shape.points[index - 1]
-                                g2.drawLine(previous.x, previous.y, point.x, point.y)
+                                graphics2D.drawLine(previous.x, previous.y, point.x, point.y)
                             }
                         }
                     }
@@ -149,7 +150,7 @@ class InternalDrawingPanel(val pictionary: PictionaryContext) : JPanel(), MouseM
             }
         }
 
-        g2.dispose()
+        graphics2D.dispose()
     }
 
     private data class ConnectedShape(val color: Color, val points: ArrayList<Point>)

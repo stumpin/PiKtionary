@@ -33,6 +33,5 @@ class PictionaryContext {
         frame.addPanels(landing)
         // the drawing panel
         frame.addPanels(tools, drawing)
-
     }
 }
