@@ -1,8 +1,11 @@
 package gui
 
-import gui.swing.InternalDrawingPanel
+import core.PictionaryContext
+
+import java.awt.FlowLayout
 
 import javax.swing.JFrame
+import javax.swing.JPanel
 
 /**
  * Created by HP xw8400
@@ -10,12 +13,16 @@ import javax.swing.JFrame
  * Date: 4/22/2019.
  */
 
-class ApplicationFrame : JFrame("Pictionary") {
-
-    private val drawingPanel = InternalDrawingPanel()
+class ApplicationFrame(val context: PictionaryContext) : JFrame("Pictionary") {
 
     init {
-        contentPane = drawingPanel
+        layout = FlowLayout(0)
+    }
+
+    fun addPanels(vararg panels : JPanel) {
+        for (panel in panels) {
+            add(panel)
+        }
         pack()
         setLocationRelativeTo(null)
         isVisible = true

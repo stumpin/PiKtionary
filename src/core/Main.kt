@@ -12,6 +12,6 @@ import javax.swing.SwingUtilities
 fun main() {
 
     SwingUtilities.invokeLater {
-        ApplicationFrame()
+        val context = PictionaryContext()
     }
 }

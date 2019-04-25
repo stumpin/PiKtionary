@@ -1,5 +1,6 @@
 package gui.swing
 
+import core.PictionaryContext
 import gui.StyleConstants
 import java.awt.*
 import java.awt.event.*
@@ -20,7 +21,7 @@ import javax.imageio.ImageIO
  * Date: 4/22/2019.
  */
 
-class InternalDrawingPanel : JPanel(), MouseMotionListener, MouseListener, KeyListener {
+class InternalDrawingPanel(val pictionary: PictionaryContext) : JPanel(), MouseMotionListener, MouseListener, KeyListener {
 
     /**
      * A set representing all of the extended key codes that are currently pressed
@@ -50,22 +51,20 @@ class InternalDrawingPanel : JPanel(), MouseMotionListener, MouseListener, KeyLi
      */
     private var drawing = false
 
-    private var image: Image? = null
-
     init {
         addMouseMotionListener(this)
         addMouseListener(this)
         addKeyListener(this)
+
         preferredSize = StyleConstants.DEFAULT_SIZE
         isFocusable = true
         requestFocusInWindow()
+    }
 
-        try {
-            val image = ImageIO.read(File("resources/trash.png"))
-            this.image = image.getScaledInstance(50, 50, Image.SCALE_SMOOTH)
-        } catch (e : Exception) {
-            e.printStackTrace()
-        }
+    fun clear() {
+        shapes.clear()
+        currentShape.points.clear()
+        repaint()
     }
 
     override fun mouseDragged(event: MouseEvent) {
@@ -132,7 +131,6 @@ class InternalDrawingPanel : JPanel(), MouseMotionListener, MouseListener, KeyLi
                 }
             }
         }
-        g2.drawImage(image, 40, 500, null)
         g2.dispose()
     }
 
