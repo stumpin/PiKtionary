@@ -15,8 +15,7 @@ import kotlin.collections.ArrayList
  * Date: 4/22/2019.
  */
 
-class InternalDrawingPanel(val pictionary: PictionaryContext) : JPanel(), MouseMotionListener, MouseListener,
-    KeyListener {
+class InternalDrawingPanel(val pictionary: PictionaryContext) : JPanel(), MouseMotionListener, MouseListener, KeyListener {
 
     /**
      * A set representing all of the extended key codes that are currently pressed
@@ -63,44 +62,25 @@ class InternalDrawingPanel(val pictionary: PictionaryContext) : JPanel(), MouseM
     }
 
     override fun mousePressed(event: MouseEvent) {
+        //the mouse is pressed, start drawing
         drawing = true
-
+        //create a new shape
         currentShape = ConnectedShape(color, ArrayList())
-
-        if (!currentShape.points.contains(event.point)) {
-            currentShape.points.add(event.point)
-        }
-        //if there are points drawn in our our shape, and it isn't in the stack yet, add it
-        if (!shapes.contains(currentShape)) {
-            shapes.push(currentShape)
-        }
-
+        //add the current point to the shape's points
+        currentShape.points.add(event.point)
+        //push the shape into the stack
+        shapes.push(currentShape)
         repaint()
     }
 
 
     override fun mouseDragged(event: MouseEvent) {
-
         if (drawing) {
             if (!currentShape.points.contains(event.point)) {
                 currentShape.points.add(event.point)
                 repaint()
             }
         }
-        //if there are points drawn in our our shape, and it isn't in the stack yet, add it
-        /* if (!shapes.contains(currentShape)) {
-             shapes.push(currentShape)
-         }
-         //if we weren't drawing before, we are now
-         //re initialize the shape
-         if (!drawing) {
-             currentShape = ConnectedShape(color, ArrayList())
-         }
-         if (!currentShape.points.contains(event.point)) {
-             currentShape.points.add(event.point)
-             repaint()
-         }
-         drawing = true*/
     }
 
     override fun mouseReleased(event: MouseEvent) {
@@ -149,17 +129,18 @@ class InternalDrawingPanel(val pictionary: PictionaryContext) : JPanel(), MouseM
         //else, draw the lines connected
 
         shapes.forEach { shape ->
+            g2.color = shape.color
+
             when (shape.points.size) {
                 1 -> {
                     val point = shape.points[0]
-                    g2.fillOval(point.x - 5, point.y - 5, 11, 11)
+                    g2.fillOval(point.x - 5, point.y - 5, 10, 10)
                 }
                 else -> {
                     shape.points.forEachIndexed { index, point ->
                         run {
                             if (index > 0) {
                                 val previous = shape.points[index - 1]
-                                g2.color = shape.color
                                 g2.drawLine(previous.x, previous.y, point.x, point.y)
                             }
                         }
@@ -168,22 +149,6 @@ class InternalDrawingPanel(val pictionary: PictionaryContext) : JPanel(), MouseM
             }
         }
 
-
-        /*if (shapes.size == 1) {
-
-        } else {
-            shapes.forEach { shape ->
-                shape.points.forEachIndexed { index, point ->
-                    run {
-                        if (index > 0) {
-                            val previous = shape.points[index - 1]
-                            g2.color = shape.color
-                            g2.drawLine(previous.x, previous.y, point.x, point.y)
-                        }
-                    }
-                }
-            }
-        }*/
         g2.dispose()
     }
 
