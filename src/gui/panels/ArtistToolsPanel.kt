@@ -1,4 +1,4 @@
-package gui.swing
+package gui.panels
 
 import core.PictionaryContext
 import gui.StyleConstants

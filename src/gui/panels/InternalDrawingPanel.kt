@@ -1,4 +1,4 @@
-package gui.swing
+package gui.panels
 
 import core.PictionaryContext
 import gui.StyleConstants
@@ -9,10 +9,6 @@ import java.util.*
 import kotlin.collections.ArrayList
 import java.util.HashSet
 import javax.swing.JPanel
-import java.awt.image.BufferedImage
-import java.io.File
-import java.lang.Exception
-import javax.imageio.ImageIO
 
 
 /**
@@ -68,9 +64,12 @@ class InternalDrawingPanel(val pictionary: PictionaryContext) : JPanel(), MouseM
     }
 
     override fun mouseDragged(event: MouseEvent) {
+        //if there are points drawn in our our shape, and it isn't in the stack yet, add it
         if (currentShape.points.isNotEmpty() && !shapes.contains(currentShape)) {
             shapes.push(currentShape)
         }
+        //if we weren't drawing before, we are now
+        //re initialize the shape
         if (!drawing) {
             currentShape = ConnectedShape(color, ArrayList())
         }

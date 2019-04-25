@@ -1,10 +1,10 @@
 package core
 
 import gui.ApplicationFrame
-import gui.fx.LandingPane
 
-import gui.swing.ArtistToolsPanel
-import gui.swing.InternalDrawingPanel
+import gui.panels.ArtistToolsPanel
+import gui.panels.InternalDrawingPanel
+import gui.panels.LandingPanel
 
 /**
  * Created by HP xw8400
@@ -14,6 +14,8 @@ import gui.swing.InternalDrawingPanel
 
 class PictionaryContext {
 
+    val landing = LandingPanel(this)
+
     val tools = ArtistToolsPanel(this)
 
     val drawing = InternalDrawingPanel(this)
@@ -21,6 +23,10 @@ class PictionaryContext {
     val frame = ApplicationFrame(this)
 
     init {
+        // the landing panel
+        frame.addPanels(landing)
+        // the drawing panel
         frame.addPanels(tools, drawing)
+
     }
 }

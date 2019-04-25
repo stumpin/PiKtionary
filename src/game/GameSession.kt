@@ -10,6 +10,4 @@ import java.util.concurrent.ConcurrentHashMap
 internal class GameSession(host : Host) {
 
     val players = ConcurrentHashMap<String, Player>()
-
-
 }
