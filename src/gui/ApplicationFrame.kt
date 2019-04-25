@@ -26,7 +26,7 @@ class ApplicationFrame(val context: PictionaryContext) : JFrame("Pictionary") {
     }
 
     //the panel(s) are placed in a 'card' panel
-    //which is then added to the main container 'deck' panel
+    //which is then added to the main 'deck' panel
     fun addPanels(vararg components : JComponent) {
         val card = JPanel()
         card.layout = FlowLayout(0)
