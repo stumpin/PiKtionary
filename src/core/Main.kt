@@ -8,15 +8,22 @@ import javax.swing.UIManager
  * Author: Jacob
  * Date: 4/23/2019.
  */
-fun main() {
 
-    try {
-        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
-    } catch (e: Exception) {
-        e.printStackTrace()
-    }
+class Main {
 
-    SwingUtilities.invokeLater {
-        val context = PictionaryContext()
+    companion object {
+
+        @JvmStatic
+        fun main(args: Array<String>) {
+            try {
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
+            SwingUtilities.invokeLater {
+                val context = PictionaryContext()
+            }
+        }
     }
 }

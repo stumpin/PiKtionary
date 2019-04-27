@@ -17,6 +17,13 @@ import kotlin.collections.ArrayList
 
 class InternalDrawingPanel(val pictionary: PictionaryContext) : JPanel(), MouseMotionListener, MouseListener, KeyListener {
 
+    var thickness = 10
+
+    /**
+     * The current color of the shape (default black)
+     */
+    var color = StyleConstants.PALETTE[15]
+
     /**
      * A set representing all of the extended key codes that are currently pressed
      */
@@ -29,14 +36,9 @@ class InternalDrawingPanel(val pictionary: PictionaryContext) : JPanel(), MouseM
     private val shapes = Stack<ConnectedShape>()
 
     /**
-     * The current color of the shape (default black)
-     */
-    var color = StyleConstants.PALETTE[15]
-
-    /**
      * The current shape being drawn
      */
-    private var currentShape = ConnectedShape(color, ArrayList())
+    private var currentShape = ConnectedShape(color, ArrayList(), thickness)
 
     /**
      * A flag value that signalizes the end of a shape
@@ -67,7 +69,7 @@ class InternalDrawingPanel(val pictionary: PictionaryContext) : JPanel(), MouseM
             //the mouse is pressed, start drawing
             drawing = true
             //create a new shape
-            currentShape = ConnectedShape(color, ArrayList())
+            currentShape = ConnectedShape(color, ArrayList(), thickness)
             //add the current point to the shape's points
             currentShape.points.add(event.point)
             //push the shape into the stack
@@ -122,7 +124,6 @@ class InternalDrawingPanel(val pictionary: PictionaryContext) : JPanel(), MouseM
         super.paintComponent(graphics)
 
         val graphics2D = graphics as Graphics2D
-        graphics2D.stroke = BasicStroke(10f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 10.0f, null, 0.0f)
         graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
 
         //there will be only 1 point in a shape if the user performs a click and never drags the mouse
@@ -131,11 +132,12 @@ class InternalDrawingPanel(val pictionary: PictionaryContext) : JPanel(), MouseM
 
         shapes.forEach { shape ->
             graphics2D.color = shape.color
+            graphics2D.stroke = BasicStroke(shape.thickness.toFloat(), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 10f, null, 0.0f)
 
             when (shape.points.size) {
                 1 -> {
                     val point = shape.points[0]
-                    graphics2D.fillOval(point.x - 5, point.y - 5, 10, 10)
+                    graphics2D.fillOval(point.x - shape.thickness / 2, point.y - shape.thickness / 2, shape.thickness, shape.thickness)
                 }
                 else -> {
                     shape.points.forEachIndexed { index, point ->
@@ -153,5 +155,5 @@ class InternalDrawingPanel(val pictionary: PictionaryContext) : JPanel(), MouseM
         graphics2D.dispose()
     }
 
-    private data class ConnectedShape(val color: Color, val points: ArrayList<Point>)
+    private data class ConnectedShape(val color: Color, val points: ArrayList<Point>, val thickness: Int)
 }

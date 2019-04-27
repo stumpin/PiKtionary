@@ -43,6 +43,59 @@ class ArtistToolsPanel(val pictionary: PictionaryContext) : JPanel(), MouseMotio
         }
 
         add(ColorGridPicker(pictionary))
+
+        for (i in 10..40 step 10) {
+
+            var highlighted = false
+
+            val panel = object : JPanel() {
+
+                override fun getBackground(): Color {
+                    return Color.LIGHT_GRAY
+                }
+
+                override fun getPreferredSize(): Dimension {
+                    return Dimension(40, i + 5)
+                }
+
+                override fun paintComponent(graphics : Graphics) {
+                    super.paintComponent(graphics)
+
+                    val graphics2D = graphics as Graphics2D
+                    graphics2D.color = StyleConstants.PALETTE[15]
+                    graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+
+                    graphics2D.fillOval(width / 2 - i / 2, height / 2 - i / 2, i, i)
+
+                    if (highlighted) {
+                        graphics2D.color = Color.LIGHT_GRAY
+                        graphics2D.drawOval(width / 2 - i / 2, height / 2 - i / 2, i, i)
+                    }
+
+                    graphics2D.dispose()
+                }
+            }
+
+            panel.addMouseListener(object: MouseListener {
+
+                override fun mouseClicked(e: MouseEvent) {
+                    pictionary.drawing.thickness = i
+                }
+
+                override fun mousePressed(e: MouseEvent) {}
+
+                override fun mouseReleased(e: MouseEvent) {}
+
+                override fun mouseEntered(e: MouseEvent) {
+                    highlighted = true
+                }
+
+                override fun mouseExited(e: MouseEvent) {
+                    highlighted = false
+                }
+            })
+            add(panel)
+        }
     }
 
     override fun mouseDragged(event: MouseEvent) {}
@@ -103,12 +156,14 @@ class ArtistToolsPanel(val pictionary: PictionaryContext) : JPanel(), MouseMotio
 
                 panel.background = color
                 panel.border = BorderFactory.createRaisedBevelBorder()
+
                 panel.addMouseListener(object: MouseListener {
                     /**
                      * Clicked in effect
                      */
                     override fun mouseClicked(e: MouseEvent) {
                         selectedPanel.border = BorderFactory.createRaisedBevelBorder()
+                        panel.background = hoverColor
                         panel.border = BorderFactory.createLoweredBevelBorder()
                         selectedPanel = panel
                         pictionary.drawing.color = color
@@ -128,6 +183,7 @@ class ArtistToolsPanel(val pictionary: PictionaryContext) : JPanel(), MouseMotio
                     override fun mouseExited(e: MouseEvent) {
                         panel.background = color
                     }
+
                 })
                 add(panel)
             }

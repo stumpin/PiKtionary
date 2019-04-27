@@ -40,6 +40,8 @@ class ApplicationFrame(val context: PictionaryContext) : JFrame("Pictionary") {
         deck.add(card)
         pack()
         setLocationRelativeTo(null)
+
+        isResizable = false // do not make true ever
         isVisible = true
     }
 

@@ -36,7 +36,7 @@ class StyleConstants {
             Color(206, 162, 98),
             Color(129, 112, 102),
             Color(166, 189, 215),
-            Color(255, 255, 255)
+            Color(240, 240, 240)
         )
     }
 }

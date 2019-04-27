@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact name="PiKtionary:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/PiKtionary_jar</output-path>
+    <root id="root">
+      <element id="archive" name="PiKtionary.jar">
+        <element id="module-output" name="PiKtionary" />
+      </element>
+      <element id="library" level="project" name="KotlinJavaRuntime" />
+    </root>
+  </artifact>
+</component>
